@@ -86,7 +86,7 @@ partial interface PictureInPictureWindow {
   <div id="player-container">
     <div id="player">
       <video id="video" src="foo.webm"></video>
-      <!-- more player elements here -->
+      <!-- More player elements here. -->
     </div>
   </div>
   <input type="button" onclick="enterPiP();" value="Enter PiP" />
