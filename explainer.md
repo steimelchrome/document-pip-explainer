@@ -40,7 +40,7 @@ partial interface Window {
   Promise<PictureInPictureWindow> requestPictureInPictureWindow(
     PictureInPicturWindowOptions options);
     attribute EventHandler onenterpictureinpicture;
-    attribute EventHandler onexitpictureinpicture;
+    attribute EventHandler onleavepictureinpicture;
   )
 };
 
@@ -125,12 +125,12 @@ function enterPiP() {
     pipBody.append(player);
 
     // Listen for the PiP closing event to put the video back.
-    window.addEventListener('exitpictureinpicture', onExitPiP, { once: true });
+    window.addEventListener('leavepictureinpicture', onLeavePiP, { once: true });
   });
 }
 
 // Called when the PiP window has closed.
-function onExitPiP(event) {
+function onLeavePiP(event) {
   // Remove PiP styling from the container.
   const playerContainer = document.querySelector('#player-container');
   playerContainer.classList.remove('pip-mode');
@@ -179,7 +179,7 @@ method on the `Document` object to accomplish this. For consistency, we will
 still use this method to close the PiP window:
 
 ```js
-// This will close the PiP window and trigger our existing onExitPiP()
+// This will close the PiP window and trigger our existing onLeavePiP()
 // listener.
 document.exitPictureInPicture();
 ```
@@ -211,14 +211,14 @@ newVideo.load();
 When the PiP window is closed for any reason (either because the website
 initiated it or the user closed it), the website will often want to get the
 elements back out of the PiP window. The website can perform this in an event
-handler for the `onexitpictureinpicture` event on the `Window` object. The UA
+handler for the `onleavepictureinpicture` event on the `Window` object. The UA
 must guarantee that the PiP document will live long enough for the event
-handlers to be run. This is shown in the `onExitPiP()` handler in the
+handlers to be run. This is shown in the `onLeavePiP()` handler in the
 [Example code](#example-code) section above and is copied below:
 
 ```js
 // Called when the PiP window has closed.
-function onExitPiP(event) {
+function onLeavePiP(event) {
   // Remove PiP styling from the container.
   const playerContainer = document.querySelector('#player-container');
   playerContainer.classList.remove('pip-mode');
