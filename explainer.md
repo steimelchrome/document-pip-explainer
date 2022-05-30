@@ -1,6 +1,6 @@
 # Document Picture-in-Picture Explained
 
-2022-01-18
+2022-05-30
 
 ## What's all this then?
 
@@ -34,20 +34,18 @@ existing `window.open()` API, with some limitations for security reasons:
 // always-on-top window with the given aspect ratio (subject to restrictions
 // by the UA) and an option to force the window to keep its original aspect
 // ratio when resizing.
-// We will also add a method to exit the PictureInPicture window as well as
-// events for detecting when picture-in-picture is entered or exited.
+// We will also add events for detecting when picture-in-picture is entered
+// or exited.
 partial interface Window {
   Promise<PictureInPictureWindow> requestPictureInPictureWindow(
-    PictureInPicturWindowOptions options);
-    attribute EventHandler onenterpictureinpicture;
-    attribute EventHandler onleavepictureinpicture;
-  )
+      PictureInPictureWindowOptions options);
+  attribute EventHandler onenterpictureinpicture;
+  attribute EventHandler onleavepictureinpicture;
 };
 
 dictionary PictureInPictureWindowOptions {
-  long width;
-  long height;
-  boolean constrainAspectRatio = false;
+  float initialAspectRatio = 0.0;
+  boolean lockAspectRatio = false;
 };
 
 // The current PictureInPictureWindow object has no document accessor (since
@@ -103,9 +101,8 @@ function enterPiP() {
   const player = document.querySelector('#player');
   
   const pipOptions = {
-    width: player.clientWidth,
-    height: player.clientHeight,
-    constrainAspectRatio: true,
+    initialAspectRatio: player.clientWidth / player.clientHeight,
+    lockAspectRatio: true,
   };
   
   window.requestPictureInPictureWindow(pipOptions).then((_pipWin) => {
