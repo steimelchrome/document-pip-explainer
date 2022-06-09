@@ -1,6 +1,6 @@
 # Document Picture-in-Picture Explained
 
-2022-05-30
+2022-06-09
 
 ## What's all this then?
 
@@ -22,7 +22,6 @@ existing `window.open()` API, with some limitations for security reasons:
 - The PiP window cannot be navigated (any `window.history` or `window.location`
   calls that change to a new document will close the PiP window).
 - The PiP window cannot open more windows.
-- The PiP window cannot download files.
 - The PiP window must be populated via JS (i.e., cannot be loaded via URL).
 - The UA can restrict the size of the PiP window.
 - The UA can restrict input on the window.
@@ -44,19 +43,24 @@ partial interface Window {
 };
 
 dictionary PictureInPictureWindowOptions {
+  // An initial aspect ratio of 0.0 implies that the website does not care to
+  // set an initial aspect ratio and the UA can determine a size.
   float initialAspectRatio = 0.0;
   boolean lockAspectRatio = false;
 };
 
 // The current PictureInPictureWindow object has no document accessor (since
-// it wasn't a window with a Document before), so we will add a document
-// accessor so the website can use it to populate the PiP window. We will
-// also add the aspect ratio options so they can be updated by the website
-// if, e.g., a new video is loaded with a different aspect ratio.
-partial interface PictureInPictureWindow {
-  readonly attribute Document? Document;
+// it wasn't a window with a Document before), and has accessors for current
+// size and events for resizing (which are not needed in document PiP since the
+// website has access to the window object itself). Therefore we will add a new
+// DocumentPictureInPictureWindow object instead of updating the existing one.
+// This has a Document accessor so the website can use it to populate the PiP
+// window, along with the aspect ratio options so they can be updated by the
+// website if, e.g., a new video is loaded with a different aspect ratio.
+interface DocumentPictureInPictureWindow {
+  readonly attribute Document? document;
   Promise<void> setAspectRatio(float aspectRatio);
-  boolean constrainAspectRatio;
+  boolean lockAspectRatio;
 };
 ```
 
@@ -99,12 +103,12 @@ let pipWindow = null;
 
 function enterPiP() {
   const player = document.querySelector('#player');
-  
+
   const pipOptions = {
     initialAspectRatio: player.clientWidth / player.clientHeight,
     lockAspectRatio: true,
   };
-  
+
   window.requestPictureInPictureWindow(pipOptions).then((_pipWin) => {
     pipWindow = _pipWin;
 
