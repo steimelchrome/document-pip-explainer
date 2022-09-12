@@ -61,7 +61,6 @@ dictionary DocumentPictureInPictureOptions {
 
 [Exposed=Window]
 interface DocumentPictureInPictureSession {
-  [SameObject] readonly attribute Document? document;
   [SameObject] readonly attribute Window? window;
   Promise<undefined> setAspectRatio(float aspectRatio);
   Promise<undefined> setLockAspectRatio(boolean lockAspectRatio);
@@ -161,11 +160,11 @@ function onLeavePiP() {
 
 ### Accessing elements on the PiP window
 
-The document attribute provides access to the DOM of the
+The `window` attribute provides access to the DOM of the
 `DocumentPictureInPictureSession` object:
 
 ```js
-const video = pipSession.document.querySelector('#video');
+const video = pipSession.window.document.querySelector('#video');
 video.loop = true;
 ```
 
@@ -176,13 +175,14 @@ often want customize buttons and controls that need to respond to user input
 events such as clicks.
 
 ```js
-const video = pipSession.document.querySelector('#video');
-const muteButton = pipSession.document.createElement('button');
+const pipDocument = pipSession.window.document;
+const video = pipDocument.querySelector('#video');
+const muteButton = pipDocument.createElement('button');
 muteButton.textContent = 'Toggle mute';
 muteButton.addEventListener('click', () => {
   video.muted = !video.muted;
 });
-pipSession.document.body.append(muteButton);
+pipDocument.body.append(muteButton);
 ```
 
 ### Exiting PiP
@@ -210,8 +210,8 @@ newVideo.id = 'video';
 newVideo.src = 'newvideo.webm';
 newVideo.addEventListener('loadedmetadata', async (_) => {
   const aspectRatio = newVideo.videoWidth / newVideo.videoHeight;
-  const player = pipWindow.document.querySelector('#player');
-  const oldVideo = pipWindow.document.querySelector('#video');
+  const player = pipSession.window.document.querySelector('#player');
+  const oldVideo = pipSession.window.document.querySelector('#video');
   player.remove(oldVideo);
   player.append(newVideo);
   await pipSession.setAspectRatio(aspectRatio);
