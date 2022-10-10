@@ -1,6 +1,6 @@
 # Document Picture-in-Picture Explained
 
-2022-08-30
+2022-10-10
 
 ## What's all this then?
 
@@ -92,6 +92,28 @@ dictionary DocumentPictureInPictureEventInit : EventInit {
   moved out of the page (that is the responsibility of the website to handle).
 - Allowing websites to open always-on-top widgets that outlive the webpage (the
   PiP window will close when the webpage is closed).
+
+### Use cases
+
+#### Custom video player
+
+While the existing Picture-in-Picture API for HTMLVideoElement allows a website
+to provide a Picture-in-Picture video experience, it is very limited in what
+inputs the window can take and the look-and-feel of those inputs. With a full
+Document in Picture-in-Picture, the website can provide custom controls and
+inputs (e.g. captions, playlists, time scrubber, liking/disliking videos, etc)
+to improve the user's PiP video experience.
+
+#### Video conferencing
+
+It is common for users to leave the tab during a video conferencing session for
+various reasons (e.g. presenting another tab to the call or multitasking) while
+still wishing to see the call, so it's a prime use case for Picture-in-Picture.
+As above, the current experience a video conferencing website can provide via
+the HTMLVideoElement PiP API is limited in style and input. With a full Document
+in Picture-in-Picture, the webiste can easily combine multiple video streams
+into a single PiP window and provide custom controls like sending a message,
+muting another user, raising a hand, etc.
 
 ## Example code
 
