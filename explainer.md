@@ -111,7 +111,7 @@ various reasons (e.g. presenting another tab to the call or multitasking) while
 still wishing to see the call, so it's a prime use case for Picture-in-Picture.
 As above, the current experience a video conferencing website can provide via
 the HTMLVideoElement PiP API is limited in style and input. With a full Document
-in Picture-in-Picture, the webiste can easily combine multiple video streams
+in Picture-in-Picture, the website can easily combine multiple video streams
 into a single PiP window and provide custom controls like sending a message,
 muting another user, raising a hand, etc.
 
